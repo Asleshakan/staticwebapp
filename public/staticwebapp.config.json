@@ -1,19 +1,2 @@
-{
-    "routes": [
-      {
-        "route": "/",
-        "rewrite": "/index.html"
-      },
-      {
-        "route": "/data/*",
-        "headers": {
-          "Cache-Control": "public, max-age=3600"
-        }
-      }
-    ],
-    "mimeTypes": {
-      ".gz": "application/gzip",
-      ".json": "application/json"
-    }
-  }
+
   
