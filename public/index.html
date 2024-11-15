@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Static Web App</title>
+</head>
+<body>
+    <h1>Welcome to Azure Static Web App</h1>
+    <p>Loading .gz and .json files...</p>
+    <script>
+        fetch('./data/file.json')
+            .then(response => response.json())
+            .then(data => console.log('JSON Data:', data))
+            .catch(error => console.error('Error loading JSON:', error));
+
+        fetch('./data/file.gz')
+            .then(response => response.arrayBuffer())
+            .then(data => console.log('GZ Data:', new Uint8Array(data)))
+            .catch(error => console.error('Error loading GZ:', error));
+    </script>
+</body>
+</html>
