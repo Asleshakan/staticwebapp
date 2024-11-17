@@ -1,23 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azure Static Web App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Azure Static Web App</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 </head>
 <body>
-    <h1>Welcome to Azure Static Web App</h1>
-    <p>Loading .gz and .json files...</p>
-    <script>
-        fetch('./data/file.json')
-            .then(response => response.json())
-            .then(data => console.log('JSON Data:', data))
-            .catch(error => console.error('Error loading JSON:', error));
+  <h1>Azure Static Web App - Load .gz File</h1>
+  <div id="status">Loading data...</div>
 
-        fetch('./data/file.gz')
-            .then(response => response.arrayBuffer())
-            .then(data => console.log('GZ Data:', new Uint8Array(data)))
-            .catch(error => console.error('Error loading GZ:', error));
-    </script>
+  <script>
+    // Fetch the compressed GeoJSON data from data/new_data.gz
+    $.ajax({
+      url: 'data/file.gz', // Updated relative path
+      method: 'GET',
+      xhrFields: {
+        responseType: 'arraybuffer' // Set response type to handle binary data
+      },
+      success: function (compressedData) {
+        try {
+          console.log("Compressed data received:", compressedData);
+
+          // Decompress the data using pako.ungzip
+          var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
+
+          // Parse the decompressed data as JSON
+          var geojson = JSON.parse(decompressedData);
+          console.log("GeoJSON data loaded successfully:", geojson);
+
+          // Update the status
+          document.getElementById('status').textContent = "Data loaded successfully!";
+        } catch (error) {
+          console.error("An error occurred while processing the GeoJSON data:", error);
+          document.getElementById('status').textContent = "Failed to load data.";
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("AJAX request failed:", status, error);
+        document.getElementById('status').textContent = "Failed to load data.";
+      }
+    });
+  </script>
 </body>
 </html>
