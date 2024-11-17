@@ -5,11 +5,18 @@
         "rewrite": "/index.html"
       },
       {
-        "route": "/data/*",
-        "headers": {
-          "Cache-Control": "public, max-age=3600"
+      "route": "/data/*",
+      "headers": [
+        {
+          "name": "x-content-type-options",
+          "value": "nosniff"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/gzip"
         }
-      }
+      ]
+    }
     ],
     "mimeTypes": {
       ".gz": "application/gzip",
