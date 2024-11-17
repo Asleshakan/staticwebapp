@@ -12,16 +12,22 @@
   <div id="status">Loading data...</div>
 
   <script>
-    // Fetch the compressed GeoJSON data from data/new_data.gz
-    $.ajax({
-      url: 'data/file1.gz', // Updated relative path
-      method: 'GET',
-      xhrFields: {
-        responseType: 'arraybuffer' // Set response type to handle binary data
-      },
-      success: function (compressedData) {
-        try {
-          console.log("Compressed data received:", compressedData);
+    // Function to fetch and process the .gz file
+    function loadGeoJsonData() {
+      // Fetch the compressed GeoJSON data from the 'data/file1.gz' location
+      $.ajax({
+        url: 'data/file1.gz',  // Correct relative path based on your deployment structure
+        method: 'GET',
+        xhrFields: {
+          responseType: 'arraybuffer'  // Set response type to handle binary data
+        },
+        success: function (compressedData) {
+          try {
+            console.log("Compressed data received:", compressedData);
+            console.log("Data byte length:", compressedData.byteLength);
+
+            // Log the raw byte data for debugging (this will print the binary content of the ArrayBuffer)
+            console.log("Raw byte data:", new Uint8Array(compressedData));
 
             // Decompress the data using pako.ungzip
             var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
