@@ -1,10 +1,19 @@
 {
-    "responseOverrides": {
-      "/data/file.gz": {
+    "routes": [
+      {
+        "route": "/",
+        "rewrite": "/index.html"
+      },
+      {
+        "route": "/data/*",
         "headers": {
-          "Content-Type": "application/gzip"
+          "Cache-Control": "public, max-age=3600"
         }
       }
+    ],
+    "mimeTypes": {
+      ".gz": "application/gzip",
+      ".json": "application/json"
     }
   }
   
