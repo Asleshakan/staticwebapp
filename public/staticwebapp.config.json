@@ -1,0 +1,10 @@
+{
+    "responseOverrides": {
+      "/data/file.gz": {
+        "headers": {
+          "Content-Type": "application/gzip"
+        }
+      }
+    }
+  }
+  
