@@ -12,39 +12,43 @@
   <div id="status">Loading data...</div>
 
   <script>
-    // Fetch the compressed GeoJSON data from the "data/file1.gz" path
-    $.ajax({
-      url: 'data/file1.gz', // Adjust the path to your actual .gz file location
-      method: 'GET',
-      xhrFields: {
-        responseType: 'arraybuffer' // Set response type to handle binary data
-      },
-      success: function (compressedData) {
-        try {
-          console.log("Compressed data received:", compressedData);
+    // Function to fetch and process the .gz file
+    function loadGeoJsonData() {
+      // Fetch the compressed GeoJSON data from the 'data/file1.gz' location
+      $.ajax({
+        url: 'data/file1.gz',  // Correct relative path based on your deployment structure
+        method: 'GET',
+        xhrFields: {
+          responseType: 'arraybuffer'  // Set response type to handle binary data
+        },
+        success: function (compressedData) {
+          try {
+            console.log("Compressed data received:", compressedData);
 
-          // Convert ArrayBuffer to Uint8Array explicitly before decompression
-          var byteArray = new Uint8Array(compressedData);
+            // Decompress the data using pako.ungzip
+            var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
 
-          // Decompress the data using pako.ungzip (or use inflate if needed)
-          var decompressedData = pako.inflate(byteArray, { to: 'string' });
+            // Parse the decompressed data as JSON (GeoJSON)
+            var geojson = JSON.parse(decompressedData);
+            console.log("GeoJSON data loaded successfully:", geojson);
 
-          // Parse the decompressed data as JSON
-          var geojson = JSON.parse(decompressedData);
-          console.log("GeoJSON data loaded successfully:", geojson);
-
-          // Update the status
-          document.getElementById('status').textContent = "Data loaded successfully!";
-        } catch (error) {
-          console.error("An error occurred while processing the GeoJSON data:", error);
+            // Update the status
+            document.getElementById('status').textContent = "Data loaded successfully!";
+            // You can now use the geojson object to render data on the map or perform other tasks
+          } catch (error) {
+            console.error("An error occurred while processing the GeoJSON data:", error);
+            document.getElementById('status').textContent = "Failed to load data.";
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("AJAX request failed:", status, error);
           document.getElementById('status').textContent = "Failed to load data.";
         }
-      },
-      error: function (xhr, status, error) {
-        console.error("AJAX request failed:", status, error);
-        document.getElementById('status').textContent = "Failed to load data.";
-      }
-    });
+      });
+    }
+
+    // Call the function to load and process the GeoJSON data
+    loadGeoJsonData();
   </script>
 </body>
 </html>
