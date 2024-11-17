@@ -1,17 +1,12 @@
 {
+  "version": "1",
   "routes": [
     {
       "route": "/data/*",
-      "headers": [
-        {
-          "name": "x-content-type-options",
-          "value": "nosniff"
-        },
-        {
-          "name": "Content-Type",
-          "value": "application/gzip"
-        }
-      ]
+      "headers": {
+        "x-content-type-options": "nosniff",
+        "Content-Type": "application/gzip"
+      }
     }
   ],
   "mimeTypes": {
