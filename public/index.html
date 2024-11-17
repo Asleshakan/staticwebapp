@@ -27,7 +27,7 @@
           var byteArray = new Uint8Array(compressedData);
 
           // Decompress the data using pako.ungzip (or use inflate if needed)
-          var decompressedData = pako.ungzip(byteArray, { to: 'string' });
+          var decompressedData = pako.inflate(byteArray, { to: 'string' });
 
           // Parse the decompressed data as JSON
           var geojson = JSON.parse(decompressedData);
