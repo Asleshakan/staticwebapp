@@ -1,10 +1,11 @@
 {
-    "routes": [
-      {
-        "route": "/",
-        "rewrite": "/index.html"
-      },
-      {
+  "version": 1,
+  "routes": [
+    {
+      "route": "/",
+      "rewrite": "/index.html"
+    },
+    {
       "route": "/data/*",
       "headers": [
         {
@@ -17,10 +18,9 @@
         }
       ]
     }
-    ],
-    "mimeTypes": {
-      ".gz": "application/gzip",
-      ".json": "application/json"
-    }
+  ],
+  "mimeTypes": {
+    ".gz": "application/gzip",
+    ".json": "application/json"
   }
-  
+}
