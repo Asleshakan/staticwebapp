@@ -24,9 +24,15 @@
         success: function (compressedData) {
           try {
             console.log("Compressed data received:", compressedData);
+            console.log("Data byte length:", compressedData.byteLength);
+
+            // Log the raw byte data for debugging (this will print the binary content of the ArrayBuffer)
+            console.log("Raw byte data:", new Uint8Array(compressedData));
 
             // Decompress the data using pako.ungzip
             var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
+
+            console.log("Decompressed data:", decompressedData);
 
             // Parse the decompressed data as JSON (GeoJSON)
             var geojson = JSON.parse(decompressedData);
