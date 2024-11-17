@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Azure Static Web App</title>
+  <title>Azure Static Web App - Load .gz File</title>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 </head>
@@ -12,36 +12,49 @@
   <div id="status">Loading data...</div>
 
   <script>
-    // Fetch the compressed GeoJSON data from data/new_data.gz
-    $.ajax({
-      url: 'data/file1.gz', // Updated relative path
-      method: 'GET',
-      xhrFields: {
-        responseType: 'arraybuffer' // Set response type to handle binary data
-      },
-      success: function (compressedData) {
-        try {
-          console.log("Compressed data received:", compressedData);
+    // Function to fetch and process the .gz file
+    function loadGeoJsonData() {
+      // Fetch the compressed GeoJSON data from the 'data/file1.gz' location
+      $.ajax({
+        url: 'data/file1.json.gz',  // Correct relative path based on your deployment structure
+        method: 'GET',
+        xhrFields: {
+          responseType: 'arraybuffer'  // Set response type to handle binary data
+        },
+        success: function (compressedData) {
+          try {
+            console.log("Compressed data received:", compressedData);
+            console.log("Data byte length:", compressedData.byteLength);
 
-          // Decompress the data using pako.ungzip
-          var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
+            // Log the raw byte data for debugging (this will print the binary content of the ArrayBuffer)
+            console.log("Raw byte data:", new Uint8Array(compressedData));
 
-          // Parse the decompressed data as JSON
-          var geojson = JSON.parse(decompressedData);
-          console.log("GeoJSON data loaded successfully:", geojson);
+            // Decompress the data using pako.ungzip
+            var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
 
-          // Update the status
-          document.getElementById('status').textContent = "Data loaded successfully!";
-        } catch (error) {
-          console.error("An error occurred while processing the GeoJSON data:", error);
+            console.log("Decompressed data:", decompressedData);
+
+            // Parse the decompressed data as JSON (GeoJSON)
+            var geojson = JSON.parse(decompressedData);
+            console.log("GeoJSON data loaded successfully:", geojson);
+
+            // Update the status
+            document.getElementById('status').textContent = "Data loaded successfully!";
+            // You can now use the geojson object to render data on the map or perform other tasks
+          } catch (error) {
+            console.error("An error occurred while processing the GeoJSON data:", error);
+            document.getElementById('status').textContent = "Failed to load data.";
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("AJAX request failed:", status, error);
           document.getElementById('status').textContent = "Failed to load data.";
         }
-      },
-      error: function (xhr, status, error) {
-        console.error("AJAX request failed:", status, error);
-        document.getElementById('status').textContent = "Failed to load data.";
-      }
-    });
+      });
+    }
+
+    // Call the function to load and process the GeoJSON data
+    loadGeoJsonData();
   </script>
 </body>
 </html>
