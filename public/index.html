@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Azure Static Web App</title>
+  <title>Azure Static Web App - Load .gz File</title>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 </head>
@@ -12,9 +12,9 @@
   <div id="status">Loading data...</div>
 
   <script>
-    // Fetch the compressed GeoJSON data from data/new_data.gz
+    // Fetch the compressed GeoJSON data from the "data/file1.gz" path
     $.ajax({
-      url: 'data/file1.gz', // Updated relative path
+      url: 'data/file1.gz', // Adjust the path to your actual .gz file location
       method: 'GET',
       xhrFields: {
         responseType: 'arraybuffer' // Set response type to handle binary data
@@ -23,8 +23,11 @@
         try {
           console.log("Compressed data received:", compressedData);
 
-          // Decompress the data using pako.ungzip
-          var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
+          // Convert ArrayBuffer to Uint8Array explicitly before decompression
+          var byteArray = new Uint8Array(compressedData);
+
+          // Decompress the data using pako.ungzip (or use inflate if needed)
+          var decompressedData = pako.ungzip(byteArray, { to: 'string' });
 
           // Parse the decompressed data as JSON
           var geojson = JSON.parse(decompressedData);
