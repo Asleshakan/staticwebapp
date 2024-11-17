@@ -29,8 +29,14 @@
             // Log the raw byte data for debugging (this will print the binary content of the ArrayBuffer)
             console.log("Raw byte data:", new Uint8Array(compressedData));
 
+            // Ensure the data starts with the gzip header (0x1f8b)
+            var uint8Data = new Uint8Array(compressedData);
+            if (uint8Data[0] !== 0x1f || uint8Data[1] !== 0x8b) {
+              throw new Error('Invalid Gzip file format');
+            }
+
             // Decompress the data using pako.ungzip
-            var decompressedData = pako.ungzip(new Uint8Array(compressedData), { to: 'string' });
+            var decompressedData = pako.ungzip(uint8Data, { to: 'string' });
 
             console.log("Decompressed data:", decompressedData);
 
